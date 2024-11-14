@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score # 정확도 함수
+from sklearn.model_selection import RandomizedSearchCV
 
 # 데이터 로드 및 전처리
 df = pd.read_csv("./otto_train.csv")
@@ -21,19 +22,37 @@ y = after_mapping_target
 
 train_x, test_x, train_y, test_y = train_test_split(X, y, test_size = 0.3, random_state = 42)
 
-param_grid = {
-    'n_estimators': [100, 200, 300],
+# param_grid = {
+#     'n_estimators': [100, 200, 300],
+#     'max_depth': [10, 20, 30, None],
+#     'min_samples_split': [2, 5, 10],
+# }
+
+# clf = RandomForestClassifier(random_state=0)
+# grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, cv=5, scoring='accuracy', verbose=2)
+# grid_search.fit(train_x, train_y)
+
+# print("최적의 하이퍼파라미터:", grid_search.best_params_) #{'max_depth': None, 'min_samples_split': 2, 'n_estimators': 300}
+
+# best_clf = grid_search.best_estimator_
+# predict = best_clf.predict(test_x)
+
+# print("최종 정확도:", accuracy_score(test_y, predict)) # 0.810493428140487
+
+param_dist = {
+    'n_estimators': [100, 200, 300, 400, 500],
     'max_depth': [10, 20, 30, None],
     'min_samples_split': [2, 5, 10],
 }
 
-clf = RandomForestClassifier(random_state=0)
-grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, cv=5, scoring='accuracy', verbose=2)
-grid_search.fit(train_x, train_y)
+# 랜덤 서치로 하이퍼파라미터 튜닝
+clf = RandomForestClassifier(random_state=42)
+random_search = RandomizedSearchCV(estimator=clf, param_distributions=param_dist, n_iter=10, cv=5, scoring='accuracy', verbose=2, random_state=42)
+random_search.fit(train_x, train_y)
 
-print("최적의 하이퍼파라미터:", grid_search.best_params_) #{'max_depth': None, 'min_samples_split': 2, 'n_estimators': 300}
+print("최적의 하이퍼파라미터:", random_search.best_params_)
 
-best_clf = grid_search.best_estimator_
+best_clf = random_search.best_estimator_
 predict = best_clf.predict(test_x)
 
-print("최종 정확도:", accuracy_score(test_y, predict)) # 0.810493428140487
+print("최종 정확도:", accuracy_score(test_y, predict))
