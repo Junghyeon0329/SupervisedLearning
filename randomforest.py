@@ -31,9 +31,9 @@ clf = RandomForestClassifier(random_state=0)
 grid_search = GridSearchCV(estimator=clf, param_grid=param_grid, cv=5, scoring='accuracy', verbose=2)
 grid_search.fit(train_x, train_y)
 
-print("최적의 하이퍼파라미터:", grid_search.best_params_)
+print("최적의 하이퍼파라미터:", grid_search.best_params_) #{'max_depth': None, 'min_samples_split': 2, 'n_estimators': 300}
 
 best_clf = grid_search.best_estimator_
 predict = best_clf.predict(test_x)
 
-print("최종 정확도:", accuracy_score(test_y, predict))
+print("최종 정확도:", accuracy_score(test_y, predict)) # 0.810493428140487
