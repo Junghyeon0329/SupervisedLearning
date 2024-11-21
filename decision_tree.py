@@ -17,16 +17,18 @@ y = iris.target
 # 데이터를 훈련용 데이터와 테스트용 데이터로 나눔 (80% 훈련, 20% 테스트)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Decision Tree 모델 정의 및 훈련
-clf = DecisionTreeClassifier(random_state=42)
+clf = DecisionTreeClassifier(
+    random_state=42,
+    max_depth=3,  # 트리의 최대 깊이 제한
+    min_samples_split=4,  # 분할을 위한 최소 샘플 수
+    min_samples_leaf=2,  # 리프 노드의 최소 샘플 수
+    max_features="sqrt"  # 분할에 사용할 최대 특징 개수
+)
+
 clf.fit(X_train, y_train)
-
-# 테스트 데이터로 예측
 y_pred = clf.predict(X_test)
-
-# 예측 결과 정확도 계산
 accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy: {accuracy * 100:.2f}%")
+print(f"Accuracy after tuning: {accuracy * 100:.2f}%")
 
 # 결정 트리를 시각화
 plt.figure(figsize=(12, 8))
