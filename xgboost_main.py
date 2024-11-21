@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-import xgboost as xgb
+import xgboost as xgb  # SupervisedLearning.xgboost_main 대신 xgboost로 변경
 
 # iris 데이터셋 로드
 iris = datasets.load_iris()
